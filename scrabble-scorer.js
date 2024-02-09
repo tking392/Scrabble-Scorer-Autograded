@@ -5,6 +5,7 @@ const input = require("readline-sync");
 let word = "";
 
 const oldPointStructure = {
+  0: [" "],
   1: ['A', 'E', 'I', 'O', 'U', 'L', 'N', 'R', 'S', 'T'],
   2: ['D', 'G'],
   3: ['B', 'C', 'M', 'P'],
@@ -16,14 +17,16 @@ const oldPointStructure = {
 
 function oldScrabbleScorer(word) {
 	word = word.toUpperCase();
-	let letterPoints = "";
+	// let letterPoints = "";
+   let letterPoints = 0;
  
 	for (let i = 0; i < word.length; i++) {
  
 	  for (const pointValue in oldPointStructure) {
  
 		 if (oldPointStructure[pointValue].includes(word[i])) {
-			letterPoints += `Points for '${word[i]}': ${pointValue}\n`
+			// letterPoints += `Points for '${word[i]}': ${pointValue}\n`
+         letterPoints += Number(pointValue);
 		 }
  
 	  }
@@ -70,8 +73,12 @@ let vowelBonusScorer = function (word) {
 };
 
 let scrabbleScorer = function (word) {
-
-
+   word = word.toLowerCase();
+   let letterPoints = 0;
+   for (let i = 0; i < word.length; i++) {
+      letterPoints += Number(newPointStructure[word[i]]);
+   }
+   return letterPoints;
 };
 
 const scoringAlgorithms = [
@@ -79,19 +86,19 @@ const scoringAlgorithms = [
    {
       name: "Simple Score",
       description: "Each letter is worth 1 point.",
-      scoringFunction: simpleScorer
+      scorerFunction: simpleScorer
    },
 
    {
       name: "Bonus Vowels Score",
       description: "Vowels are 3 pts, consonants are 1 pt.",
-      scoringFunction: vowelBonusScorer
+      scorerFunction: vowelBonusScorer
    },
    
    {
       name: "Scrabble Score",
       description: "The traditional scoring algorithm.",
-      scoringFunction: scrabbleScorer
+      scorerFunction: scrabbleScorer
    }
 
 ];
@@ -112,18 +119,28 @@ function scorerPrompt(word) {
    }
 
    if (numInput === 0) {
-      return console.log(`Score for '${word}': ${scoringAlgorithms[0].scoringFunction(word)}`);
+      return console.log(`Score for '${word}': ${scoringAlgorithms[0].scorerFunction(word)}`);
    } else if (numInput === 1) {
-      return console.log(`Score for '${word}': ${scoringAlgorithms[1].scoringFunction(word)}`);
+      return console.log(`Score for '${word}': ${scoringAlgorithms[1].scorerFunction(word)}`);
    } else if (numInput === 2) {
-      return console.log(`Score for '${word}': ${scoringAlgorithms[2].scoringFunction(word)}`);
+      return console.log(`Score for '${word}': ${scoringAlgorithms[2].scorerFunction(word)}`);
    }
    
 }
 
-function transform() {};
+function transform(oldPointStructure) {
+   let letterPoints = {};
+   for (pointValue in oldPointStructure) {
+      for (let i = 0; i < oldPointStructure[pointValue].length; i++) {
+         letterPoints[oldPointStructure[pointValue][i].toLowerCase()] = Number(pointValue);
+      }
+   }
+   return letterPoints; 
+};
 
-let newPointStructure;
+
+
+let newPointStructure = transform(oldPointStructure);
 
 function runProgram() {
    initialPrompt();
