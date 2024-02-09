@@ -2,6 +2,8 @@
 
 const input = require("readline-sync");
 
+let word = "";
+
 const oldPointStructure = {
   1: ['A', 'E', 'I', 'O', 'U', 'L', 'N', 'R', 'S', 'T'],
   2: ['D', 'G'],
@@ -34,8 +36,8 @@ function oldScrabbleScorer(word) {
 
 function initialPrompt() {
    console.log("Let's play some scrabble!\n");
-   let userWord = input.question("Enter a word to score: ");
-   return userWord;
+   word = input.question("Enter a word to score: ");
+   return word;
    // return console.log(oldScrabbleScorer(userWord));
    // return console.log(simpleScorer(userWord));
    // return console.log(vowelBonusScorer(userWord));
@@ -43,11 +45,12 @@ function initialPrompt() {
 
 
 
-function simpleScorer(word) {
-   return word.length;
+let simpleScorer = function (word) {
+   let letterPoints = word.length;
+   return letterPoints;
 };
 
-function vowelBonusScorer(word) {
+let vowelBonusScorer = function (word) {
    let vowels = ["A", "E", "I", "O", "U"];
    let vowelScore = 3; 
    let wordScore = 0;
@@ -66,7 +69,10 @@ function vowelBonusScorer(word) {
    return wordScore;
 };
 
-let scrabbleScorer;
+let scrabbleScorer = function (word) {
+
+
+};
 
 const scoringAlgorithms = [
 
@@ -90,8 +96,8 @@ const scoringAlgorithms = [
 
 ];
 
-function scorerPrompt() {
-   let numInput = input.question(`
+function scorerPrompt(word) {
+   let numInput = Number(input.question(`
    Which scoring algorithm would you like to use?
 
       0 - ${scoringAlgorithms[0].name}: ${scoringAlgorithms[0].description}
@@ -99,10 +105,20 @@ function scorerPrompt() {
       2 - ${scoringAlgorithms[2].name}: ${scoringAlgorithms[2].description}
    
       Please Enter 0, 1, or 2: 
-`)
-    console.log(numInput);
-    return numInput;
-  
+`));
+
+   while (numInput < 0 || numInput > 2 || isNaN(numInput)) {
+      numInput = Number(input.question("Invalid entry... Please enter 0, 1, or 2!: "))
+   }
+
+   if (numInput === 0) {
+      return console.log(`Score for '${word}': ${scoringAlgorithms[0].scoringFunction(word)}`);
+   } else if (numInput === 1) {
+      return console.log(`Score for '${word}': ${scoringAlgorithms[1].scoringFunction(word)}`);
+   } else if (numInput === 2) {
+      return console.log(`Score for '${word}': ${scoringAlgorithms[2].scoringFunction(word)}`);
+   }
+   
 }
 
 function transform() {};
@@ -111,7 +127,8 @@ let newPointStructure;
 
 function runProgram() {
    initialPrompt();
-   scorerPrompt();
+   // console.log(simpleScorer("help"));
+   scorerPrompt(word);
 }
 
 // Don't write any code below this line //
