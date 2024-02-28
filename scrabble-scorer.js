@@ -103,7 +103,7 @@ const scoringAlgorithms = [
 
 ];
 
-function scorerPrompt(word) {
+function scorerPrompt() {
    let numInput = Number(input.question(`
    Which scoring algorithm would you like to use?
 
@@ -117,22 +117,15 @@ function scorerPrompt(word) {
    while (numInput < 0 || numInput > 2 || isNaN(numInput)) {
       numInput = Number(input.question("Invalid entry... Please enter 0, 1, or 2!: "))
    }
-
-   if (numInput === 0) {
-      return console.log(`Score for '${word}': ${scoringAlgorithms[0].scorerFunction(word)}`);
-   } else if (numInput === 1) {
-      return console.log(`Score for '${word}': ${scoringAlgorithms[1].scorerFunction(word)}`);
-   } else if (numInput === 2) {
-      return console.log(`Score for '${word}': ${scoringAlgorithms[2].scorerFunction(word)}`);
-   }
-   
+   console.log(`Score for '${word}': ${scoringAlgorithms[numInput].scorerFunction(word, newPointStructure)}`);
 }
 
 function transform(oldPointStructure) {
    let letterPoints = {};
-   for (pointValue in oldPointStructure) {
-      for (let i = 0; i < oldPointStructure[pointValue].length; i++) {
-         letterPoints[oldPointStructure[pointValue][i].toLowerCase()] = Number(pointValue);
+   for (let pointValue in oldPointStructure) {
+      let letters = oldPointStructure[pointValue]
+      for (let i = 0; i < letters.length; i++) {
+         letterPoints[letters[i].toLowerCase()] = Number(pointValue);
       }
    }
    return letterPoints; 
@@ -145,7 +138,7 @@ let newPointStructure = transform(oldPointStructure);
 function runProgram() {
    initialPrompt();
    // console.log(simpleScorer("help"));
-   scorerPrompt(word);
+   scorerPrompt();
 }
 
 // Don't write any code below this line //
