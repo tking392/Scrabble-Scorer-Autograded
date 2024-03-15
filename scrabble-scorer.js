@@ -5,7 +5,7 @@ const input = require("readline-sync");
 let word = "";
 
 const oldPointStructure = {
-   0: [" "],
+   // 0: [" "],
    1: ['A', 'E', 'I', 'O', 'U', 'L', 'N', 'R', 'S', 'T'],
    2: ['D', 'G'],
    3: ['B', 'C', 'M', 'P'],
@@ -75,7 +75,7 @@ function scrabbleScorer(word) {
    word = word.toLowerCase();
    let letterPoints = 0;
    for (let i = 0; i < word.length; i++) {
-      letterPoints += newPointStructure[word[i]];
+      letterPoints += Number(newPointStructure[word[i]]);
    }
    return letterPoints;
 };
@@ -120,24 +120,31 @@ function scorerPrompt() {
 }
 
 function transform(oldPointStructure) {
-   let letterPoints = {};
+   let letterPoints = [];
    for (let pointValue in oldPointStructure) {
-      let letters = oldPointStructure[pointValue]
-      for (let i = 0; i < letters.length; i++) {
-         letterPoints[letters[i].toLowerCase()] = Number(pointValue);
+   //    let letters = oldPointStructure[pointValue];
+   //    for (let i = 0; i < letters.length; i++) {
+   //       letterPoints[letters[i].toLowerCase()] = Number(pointValue);
+   //    }
+   // }
+   // return letterPoints;
+      for(let i = 0; i < oldPointStructure[pointValue].length; i++) {
+         let letters = oldPointStructure[pointValue][i];
+            letters = letters.toLowerCase();
+            letterPoints[`${letters}`] = Number(pointValue);
       }
    }
-   return letterPoints;
+      return letterPoints;
 };
 
 
 
 let newPointStructure = transform(oldPointStructure);
-
+console.log(newPointStructure);
 function runProgram() {
    initialPrompt();
-   // console.log(simpleScorer("help"));
    scorerPrompt();
+   // console.log(typeof(transform(oldPointStructure)));
 }
 
 // Don't write any code below this line //
